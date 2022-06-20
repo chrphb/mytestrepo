@@ -1,0 +1,32 @@
+version: 0.2
+env:
+ # shell: bash
+  git-credential-helper: yes
+phases:
+  pre_build:
+    commands:
+      # Install some packages
+      - echo "Install Utilities , Tools or Packages, for e.g. terraform"
+      - PROJECT_BIN_DIR="${CODEBUILD_SRC_DIR}/bin"
+      - |
+        if [ ! -d "${PROJECT_BIN_DIR}" ]; then
+          mkdir $PROJECT_BIN_DIR
+          ZIP_NAME="terraform_linux_amd64.zip"
+          wget --quiet -O $ZIP_NAME "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip"
+          unzip -o $ZIP_NAME -d "${PROJECT_BIN_DIR}/"
+          rm -f $ZIP_NAME
+        fi
+      - export PATH=$PROJECT_BIN_DIR:$PATH
+      - yum install tree -y
+  build:
+    commands:
+      - terraform version
+      - tree .
+      - pwd 
+  post_build:
+    commands:
+      - echo "Buildspec has finished running"
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: no
