@@ -3,6 +3,7 @@ env:
  # shell: bash
   git-credential-helper: yes
 phases:
+  # pre build
   pre_build:
     commands:
       # Install some packages
